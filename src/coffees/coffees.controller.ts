@@ -13,6 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiForbiddenResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Protocol } from 'src/common/decorators/protocol.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
@@ -25,9 +26,11 @@ import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 export class CoffeesController {
   constructor(private readonly coffeesService: CoffeesService) {}
 
+  @ApiTags('coffees')
   @Public()
   @UsePipes(ValidationPipe)
   @Get()
+  @ApiForbiddenResponse({ description: 'fuck nah' })
   async findAll(
     @Protocol('https') protocol: string,
     @Query() paginationQuery: PaginationQueryDto,
@@ -37,6 +40,7 @@ export class CoffeesController {
     return this.coffeesService.findAll(paginationQuery);
   }
 
+  @ApiTags('coffees')
   @UsePipes(ParseIntPipe)
   @Get(':id')
   findOne(@Param('id') id: number) {
@@ -45,11 +49,13 @@ export class CoffeesController {
     return this.coffeesService.findOne('' + id);
   }
 
+  @ApiTags('coffees')
   @Post()
   create(@Body() createCoffeeDto: CreateCoffeeDto) {
     return this.coffeesService.create(createCoffeeDto);
   }
 
+  @ApiTags('coffees')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -58,6 +64,7 @@ export class CoffeesController {
     return this.coffeesService.update(id, updateCoffeeDto);
   }
 
+  @ApiTags('coffees')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.coffeesService.remove(id);
